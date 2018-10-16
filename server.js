@@ -6,62 +6,9 @@ const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 
+const resolvers = require('./resolvers');
+const typeDefs = require('./schema');
 
-
-
-
-const typeDefs = `
-type DBString {
-  _id: String!
-  name: String!
-}
-type Query {
-  allDBStrings: [DBString!]!
-  oneDBString(name: String!): DBString!
-}
-type Mutation {
-  createDBString(name: String!): DBString!
-  removeDBString(name: String!): [DBString!]!
-
-}
-
-`;
-
-
-const resolvers = {
-  Query: {
-    allDBStrings: async (parent, args, { DBString }) => {
-      // { _id: 123123, name: "whatever"}
-      const DBStrings = await DBString.find();
-      return DBStrings.map((x) => {
-        x._id = x._id.toString();
-        return x;
-      });
-    },
-    oneDBString: async (parent, {name}, { DBString }) => {
-      const result= await DBString.findOne({'name': name});
-
-      return result;
-    },
-  },
-  Mutation: {
-    createDBString: async (parent, args, { DBString }) => {
-      // { _id: 123123, name: "whatever"}
-      const result = await new DBString(args).save();
-      result._id = result._id.toString();
-      return result;
-    },
-  removeDBString: async (parent, {name}, { DBString }) => {
-    var result= await DBString.remove(DBString.findOne({'name': name}));
-    const DBStrings = await DBString.find();
-    return DBStrings.map((x) => {
-      x._id = x._id.toString();
-      return x;
-    });
-
-    },
-  },
-};
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
@@ -70,12 +17,7 @@ const schema = makeExecutableSchema({
 
 const DBString = mongoose.model('DBString', { name: String });
 // Some fake data
-
 // The GraphQL schema in string form
-
-
-// The resolvers
-
 
 // Put together a schema
 mongoose.connect('mongodb://dbuser:cabedi1@ds127490.mlab.com:27490/ctestdb');

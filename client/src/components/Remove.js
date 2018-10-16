@@ -18,12 +18,12 @@ const Remove = () => {
 
   return (
     <Mutation mutation={REMOVE}>
-      {(removeCat, { data }) => (
+      {(removeDBString, { data }) => (
         <div>
           <form
             onSubmit={e => {
               e.preventDefault();
-              removeCat({ variables: { name: input.value } });
+              removeDBString({ variables: { name: input.value } });
               input.value = "";             
             }}
           >

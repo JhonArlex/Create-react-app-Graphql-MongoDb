@@ -47,7 +47,7 @@ render(){
   <Query
     query={gql`
       {
-        allDBStrings {
+        allStorage {
           _id
           name
         }
@@ -65,7 +65,7 @@ render(){
   
             
 <TableBody>
-      {data.allDBStrings.map(({ _id, name }) => {
+      {data.allStorage.map(({ _id, name }) => {
 
 
         return(
